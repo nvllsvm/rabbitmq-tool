@@ -9,6 +9,8 @@ A RabbitMQ CLI
 - show all exchanges and queues
 - create and delete exchanges and queues
 
+## Why not use one of the existing RabbitMQ CLI's?
+Honestly, I don't remember why I wrote this instead of using an existing tool. 🤷
 
 ## Installation
 ```
