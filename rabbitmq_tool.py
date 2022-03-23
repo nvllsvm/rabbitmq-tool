@@ -80,6 +80,11 @@ class RabbitMQ:
             })
         assert response.status_code in (201, 204)
 
+    def definitions(self):
+        response = self._client.get(f'{self._url}/api/definitions/{self._vhost}')
+        assert response.status_code == 200
+        return response.json()
+
     def list_bindings(self):
         response = self._client.get(f'{self._url}/api/bindings/{self._vhost}')
         assert response.status_code == 200
@@ -219,6 +224,11 @@ class _Parser:
         rabbitmq = _Parser._setup_rabbitmq(args)
         print(_pretty_json(rabbitmq.list_queues()))
 
+    @staticmethod
+    def definitions(args):
+        rabbitmq = _Parser._setup_rabbitmq(args)
+        print(_pretty_json(rabbitmq.definitions()))
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -283,6 +293,9 @@ def main():
 
     list_queues = subparsers.add_parser('list-queues')
     list_queues.set_defaults(func=_Parser.list_queues)
+
+    definitions = subparsers.add_parser('definitions')
+    definitions.set_defaults(func=_Parser.definitions)
 
     bind = subparsers.add_parser('bind')
     bind.set_defaults(func=_Parser.bind)
