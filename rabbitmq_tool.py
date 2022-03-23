@@ -80,6 +80,11 @@ class RabbitMQ:
             })
         assert response.status_code in (201, 204)
 
+    def list_bindings(self):
+        response = self._client.get(f'{self._url}/api/bindings/{self._vhost}')
+        assert response.status_code == 200
+        return response.json()
+
     def list_exchanges(self):
         response = self._client.get(f'{self._url}/api/exchanges/{self._vhost}')
         assert response.status_code == 200
@@ -200,6 +205,11 @@ class _Parser:
             routing=args.routing)
 
     @staticmethod
+    def list_bindings(args):
+        rabbitmq = _Parser._setup_rabbitmq(args)
+        print(_pretty_json(rabbitmq.list_bindings()))
+
+    @staticmethod
     def list_exchanges(args):
         rabbitmq = _Parser._setup_rabbitmq(args)
         print(_pretty_json(rabbitmq.list_exchanges()))
@@ -264,6 +274,9 @@ def main():
     describe_queue = subparsers.add_parser('describe-queue')
     describe_queue.set_defaults(func=_Parser.describe_queue)
     describe_queue.add_argument('queue')
+
+    list_bindings = subparsers.add_parser('list-bindings')
+    list_bindings.set_defaults(func=_Parser.list_bindings)
 
     list_exchanges = subparsers.add_parser('list-exchanges')
     list_exchanges.set_defaults(func=_Parser.list_exchanges)
